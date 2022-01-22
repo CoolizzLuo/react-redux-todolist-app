@@ -1,5 +1,5 @@
 {
-  "name": "todolist-app",
+  "name": "react-redux-todolist-app",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -13,7 +13,7 @@
     "uuid": "^8.3.2",
     "web-vitals": "^1.1.2"
   },
-  "homepage": "https://coolizz.github.io/react-todolist-app",
+  "homepage": "https://coolizz.github.io/react-redux-todolist-app",
   "scripts": {
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
