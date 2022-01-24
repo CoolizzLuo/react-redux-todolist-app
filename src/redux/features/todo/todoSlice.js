@@ -3,8 +3,9 @@ import { v4 } from 'uuid'
 
 const initialState = {
   todos: [
-    { id: v4(), content: '飄浮... 你也會飄浮嗎？', isDone: false },
-    { id: v4(), content: '跳舞小丑潘尼懷斯！', isDone: true }
+    { id: v4(), content: '吃飯？', isDone: false },
+    { id: v4(), content: '睡覺！', isDone: true },
+    { id: v4(), content: '打咚咚？！', isDone: false }
   ]
 }
 
@@ -15,14 +16,14 @@ export const todoSlice = createSlice({
     addTodo: (state, action) => {
       state.todos.push({
         id: v4(),
-        content: action.payload.value,
+        content: action.payload.content,
         isDone: false
       })
     },
     updateTodo: (state, action) => {
-      state.todos.map(todo => {
-        if (todo.id === action.payload.editId) {
-          return todo.content = action.payload.value
+      state.todos.forEach(todo => {
+        if (todo.id === action.payload.id) {
+          return todo.content = action.payload.content
         }
         return todo
       })
@@ -32,7 +33,7 @@ export const todoSlice = createSlice({
       state.todos.splice(index, 1)
     },
     isDoneToggle: (state, action) => {
-      state.todos.map(todo => {
+      state.todos.forEach(todo => {
         if (todo.id === action.payload.id) {
           return todo.isDone = !todo.isDone
         }

@@ -21,7 +21,7 @@ const Button = styled.button`
     background: #f9ca24;
     color: #333;
   }
-  ${({ active }) => active && `
+  ${({ $active }) => $active && `
     background: #f9ca24;
     color: #333;
   `}
@@ -39,7 +39,7 @@ const TodoFilterButton = () => {
         Object.keys(filterSlice.actions).map((action) => (
           <Button
             key={action}
-            active={filterValue === action}
+            $active={filterValue === action}
             onClick={handleChangeFilter(action)}>
             {action}
           </Button>

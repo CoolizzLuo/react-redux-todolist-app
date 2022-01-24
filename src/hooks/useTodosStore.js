@@ -1,73 +1,53 @@
-import { useState, useEffect, useMemo, useCallback } from 'react'
-import { v4 } from 'uuid'
+import { useMemo } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { selectorFilter } from '../redux/features/filter/filterSlice'
+import { todoSlice, addTodo, deleteTodo, updateTodo, isDoneToggle, clearTodos, selectorTodo } from '../redux/features/todo/todoSlice'
 
-const useTodosStore = (initialValue = [], localStorageKey = 'todos') => {
-  const [filterValue, setFilterValue] = useState('All')
-  const [todos, setTodos] = useState(() => {
-    try {
-      const item = window.localStorage.getItem(localStorageKey)
-      return item ? JSON.parse(item) : initialValue
-    } catch (error) {
-      return initialValue
-    }
-  })
 
-  useEffect(() => window.localStorage.setItem(localStorageKey, JSON.stringify(todos)))
+const useTodosStore = (initialValue, localStorageKey = 'todos') => {
+  const filterValue = useSelector(selectorFilter)
+  const todos = useSelector(selectorTodo)
+  const dispatch = useDispatch()
 
-  const handleAddTodo = useCallback((todoContent) => {
-    setTodos([
-      {
-        id: v4(),
-        content: todoContent,
-        isDone: false
-      },
-      ...todos
-    ])
-  }, [todos])
+  // const [todos, setTodos] = useState(() => {
+  //   try {
+  //     const item = window.localStorage.getItem(localStorageKey)
+  //     return item ? JSON.parse(item) : initialValue
+  //   } catch (error) {
+  //     return initialValue
+  //   }
+  // })
 
-  const handleUpdateTodo = useCallback((id, newContent) => {
-    setTodos(todos.map((todo) => {
-      if (todo.id !== id) return todo
-      return {
-        ...todo,
-        content: newContent
-      }
-    }))
-  }, [todos])
+  // useEffect(() => window.localStorage.setItem(localStorageKey, JSON.stringify(todos)))
 
-  const handleChangeDoneTodo = useCallback((id) => {
-    setTodos(todos.map((todo) => {
-      if (todo.id !== id) return todo
-      return {
-        ...todo,
-        isDone: !todo.isDone
-      }
-    }))
-  }, [todos])
+  const handleAddTodo = (content) => dispatch(addTodo({ content }))
+  const handleUpdateTodo = (id, content) => dispatch(updateTodo({ id, content }))
+  const handleDeleteTodo = (id) => dispatch(deleteTodo({ id }))
+  const handleIsDoneTodo = (id) => dispatch(isDoneToggle({ id }))
+  const handleClearTodos = () => dispatch(clearTodos())
 
-  const handleDeleteTodo = useCallback((id) => {
-    setTodos(todos.filter((todo) => todo.id !== id))
-  }, [todos])
+  console.log(todoSlice)
 
   const filterTodos = useMemo(() => {
-    const options = {
-      All: todo => todo,
-      Done: todo => todo.isDone,
-      Todo: todo => !todo.isDone
+    console.log(filterValue);
+    switch (filterValue) {
+      case 'done':
+        return todos.filter(todo => todo.isDone)
+      case 'unDone':
+        return todos.filter(todo => !todo.isDone)
+      case 'all':
+      default:
+        return todos
     }
-    return todos.filter(options[filterValue])
   }, [filterValue, todos])
 
   return {
-    todos,
-    setTodos,
-    filterValue,
-    setFilterValue,
+    todos: filterTodos,
     handleAddTodo,
     handleUpdateTodo,
-    handleChangeDoneTodo,
+    handleIsDoneTodo,
     handleDeleteTodo,
-    filterTodos
+    handleClearTodos
   }
 }
 
