@@ -15,6 +15,7 @@ const Input = styled.input`
   outline: none;
   border: none;
   flex-grow: 1;
+  border-radius: 6px 0 0 6px;
 `
 
 const Button = styled.button`
@@ -23,6 +24,7 @@ const Button = styled.button`
   flex-grow: 1;
   background: transparent;
   border: 1px solid #fff;
+  border-radius: 0 6px 6px 0;
   color: #fff;
   cursor: pointer;
   box-sizing: border-box;
@@ -46,11 +48,11 @@ const TodoAddInput = ({ addTodo }) => {
   }, [addTodo, value, setValue])
 
   return (
-    <TodoInputWrapper onSubmit={ handleSubmit }>
-      <Input 
-        type="text" 
-        value={value} 
-        onChange={handleChange} 
+    <TodoInputWrapper onSubmit={handleSubmit}>
+      <Input
+        type="text"
+        value={value}
+        onChange={handleChange}
         onKeyUp={handleEscKey} />
       <Button>Add item</Button>
     </TodoInputWrapper>
