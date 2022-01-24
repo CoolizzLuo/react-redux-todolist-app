@@ -1,5 +1,7 @@
-import { useRef } from 'react'
 import styled from 'styled-components'
+import { useSelector, useDispatch } from 'react-redux'
+import { filterSlice, selectorFilter } from '../redux/features/filter/filterSlice'
+
 
 const FilterBtnWrapper = styled.div`
   margin: 2rem 0;
@@ -19,25 +21,27 @@ const Button = styled.button`
     background: #f9ca24;
     color: #333;
   }
-  ${({active}) => active && `
+  ${({ active }) => active && `
     background: #f9ca24;
     color: #333;
   `}
   
 `
 
-const TodoFilterButton = ({ filterValue, setFilter }) => {
-  const btnList = useRef(['All', 'Done', 'Todo'])
+const TodoFilterButton = () => {
+  const filterValue = useSelector(selectorFilter)
+  const dispatch = useDispatch()
+  const handleChangeFilter = (action) => () => dispatch(filterSlice.actions[action]())
 
   return (
     <FilterBtnWrapper>
-      { 
-        btnList.current.map((btn) => (
-          <Button 
-            key={btn} 
-            active={filterValue === btn} 
-            onClick={() => setFilter(btn)}>
-            { btn }
+      {
+        Object.keys(filterSlice.actions).map((action) => (
+          <Button
+            key={action}
+            active={filterValue === action}
+            onClick={handleChangeFilter(action)}>
+            {action}
           </Button>
         ))
       }
