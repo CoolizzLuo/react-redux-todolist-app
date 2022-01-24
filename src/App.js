@@ -1,7 +1,7 @@
 import './App.css'
 import styled from 'styled-components'
 import TodoApp from './components/TodoApp'
-import { TITLE_DESCRIPTION, ARTHUR, ARTHUR_MAIL, COPYRIGHT_YEAR } from './constants/data'
+import { TITLE_DESCRIPTION, ARTHUR, ARTHUR_GITHUB, COPYRIGHT_YEAR } from './constants/data'
 
 const Container = styled.div`
   margin: 4rem auto;
@@ -30,7 +30,7 @@ const Header = styled.header`
     margin-bottom: 0.7rem;
     margin-top: 0.2rem;
   }
-` 
+`
 
 const Footer = styled.footer`
   letter-spacing: 0.05rem;
@@ -63,9 +63,9 @@ function App() {
           <span>{TITLE_DESCRIPTION}</span>
         </h1>
       </Header>
-      <TodoApp/>
+      <TodoApp />
       <Footer>
-        <span>&copy; copyright {COPYRIGHT_YEAR} by <a href={`mailto${ARTHUR_MAIL}`}>{ARTHUR}</a></span>
+        <span>&copy; copyright {COPYRIGHT_YEAR} by <a href={ARTHUR_GITHUB} target="_blank" rel="noreferrer">{ARTHUR}</a></span>
       </Footer>
     </Container>
   );
