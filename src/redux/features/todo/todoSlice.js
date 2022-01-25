@@ -1,12 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { v4 } from 'uuid'
+import { TODO_LS_KEY } from '../../../constants/data'
 
 const initialState = {
-  todos: [
-    { id: v4(), content: '吃飯？', isDone: false },
-    { id: v4(), content: '睡覺！', isDone: true },
-    { id: v4(), content: '打咚咚？！', isDone: false }
-  ]
+  todos: JSON.parse(window.localStorage.getItem(TODO_LS_KEY)) ||
+    [
+      { id: v4(), content: '吃飯？', isDone: false },
+      { id: v4(), content: '睡覺！', isDone: true },
+      { id: v4(), content: '打咚咚？！', isDone: false }
+    ]
 }
 
 export const todoSlice = createSlice({
