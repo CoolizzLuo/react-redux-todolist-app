@@ -23,7 +23,7 @@ const TodoItemContent = styled.div`
     word-break: break-all;
     transition: all .6s;
 
-    ${({isDone}) => isDone && `
+    ${({ isDone }) => isDone && `
       opacity: 0.4;
       text-decoration: line-through;
       font-style: italic;
@@ -60,62 +60,69 @@ const TodoItemAction = styled.div`
   }
 `
 
-
 const TodoItem = ({ todo, editing, setEditing, updateTodo, changeDoneTodo, deleteTodo }) => {
-  const isEditing = useMemo(()=> editing === todo.id, [editing, todo])
+  const isEditing = useMemo(() => editing === todo.id, [editing, todo])
+
   const TodoEditing = () => {
     const { value, setValue, handleChange } = useInput(todo.content)
-
-    const update = useCallback(() => {
+    const handleUpdate = useCallback(() => {
       if (!value.trim()) return alert('must be have input value')
       if (!window.confirm('sure update todo ?')) return
-  
+
       updateTodo(todo.id, value)
       setValue('')
       setEditing(null)
     }, [setValue, value])
-    const handleCancel = useCallback(() =>  window.confirm('sure give editing ?') && setEditing(null), [])
+    const handleCancel = useCallback(() => {
+      if (window.confirm('sure give editing ?')) setEditing(null)
+    }, [])
 
     const handleInputKeyUp = (e) => {
-      if (e.key === 'Enter') return update()
+      if (e.key === 'Enter') return handleUpdate()
       if (e.key === 'Escape') return handleCancel()
     }
 
     return (
       <>
         <TodoItemContent>
-          <input type="text" value={ value } onChange={ handleChange } onKeyUp={ handleInputKeyUp } />
+          <input type="text" value={value} onChange={handleChange} onKeyUp={handleInputKeyUp} />
         </TodoItemContent>
         <TodoItemAction>
-          <button onClick={ update }><i className="fa fa-check"></i></button>
-          <button onClick={ handleCancel }><i className="fa fa-close"></i></button>
+          <button onClick={handleUpdate}><i className="fa fa-check"></i></button>
+          <button onClick={handleCancel}><i className="fa fa-close"></i></button>
         </TodoItemAction>
       </>
     )
   }
-  
-  const handleSetEdit = () => (!editing || (!isEditing && window.confirm('give up editing ?'))) && setEditing(todo.id)
-  const handleDeleteTodo = () => (window.confirm(`sure delete this todo: ${todo.content}`) && deleteTodo(todo.id))
-  const handleChangeDone = () => changeDoneTodo(todo.id)
 
-  return(
+  const TodoShowing = () => {
+    const handleSetEdit = () => {
+      if (!editing || (!isEditing && window.confirm('give up editing ?'))) setEditing(todo.id)
+    }
+    const handleDeleteTodo = () => {
+      if (window.confirm(`sure delete this todo: ${todo.content}`)) deleteTodo(todo.id)
+    }
+    const handleChangeDone = () => changeDoneTodo(todo.id)
+
+    return (
+      <>
+        <TodoItemContent isDone={todo.isDone}>
+          <h3>{todo.content}</h3>
+        </TodoItemContent>
+        <TodoItemAction>
+          <button onClick={handleSetEdit}><i className="fa fa-edit"></i></button>
+          <button onClick={handleChangeDone}>
+            <i className={`fa ${todo.isDone ? 'fa-check-square' : 'fa-square'}`}></i>
+          </button>
+          <button onClick={handleDeleteTodo}><i className="fa fa-trash"></i></button>
+        </TodoItemAction>
+      </>
+    )
+  }
+
+  return (
     <TodoItemWrapper>
-      {  
-        isEditing ?
-        <TodoEditing/> :
-        <>
-          <TodoItemContent  isDone={todo.isDone}>
-            <h3>{ todo.content }</h3>
-          </TodoItemContent>
-          <TodoItemAction>
-            <button onClick={ handleSetEdit }><i className="fa fa-edit"></i></button>
-            <button onClick={ handleChangeDone }>
-              <i className={`fa ${todo.isDone ? 'fa-check-square' : 'fa-square'}`}></i>
-            </button>
-            <button onClick={ handleDeleteTodo }><i className="fa fa-trash"></i></button>
-          </TodoItemAction>
-        </>
-      }
+      {isEditing ? <TodoEditing /> : <TodoShowing />}
     </TodoItemWrapper>
   )
 }
